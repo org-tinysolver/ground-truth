@@ -1,0 +1,76 @@
+---
+sidebar_position: 3
+---
+
+# MVP 가이드
+
+Minimum Viable Product - 실제 사용자와 함께 성장하기
+
+## MVP란?
+
+> "고객이 쓸 수 있는 가장 작은 제품"
+
+POC에서 가설이 검증되면, 실제 사용자가 사용할 수 있는 최소한의 제품을 만듭니다.
+
+## POC vs MVP
+
+```mermaid
+flowchart LR
+    subgraph POC
+        P1[가설 검증]
+        P2[기술 가능성]
+        P3[내부 테스트]
+    end
+
+    subgraph MVP
+        M1[실사용 가능]
+        M2[사용자 피드백]
+        M3[빠른 이터레이션]
+    end
+
+    POC --> MVP
+```
+
+| 구분 | POC | MVP |
+|------|-----|-----|
+| 목적 | 기술 검증 | 시장 검증 |
+| 사용자 | 내부 | 실제 사용자 |
+| 품질 | 실험적 | 사용 가능 |
+| 기간 | 1-2주 | 2-4주 |
+
+## MVP 핵심 원칙
+
+<!-- TODO: 상세 원칙 -->
+
+1. **최소 기능만** - 핵심 가치 하나에 집중
+2. **빠른 출시** - 완벽함보다 속도
+3. **피드백 루프** - 출시 → 피드백 → 개선
+
+## MVP 로드맵 템플릿
+
+```mermaid
+gantt
+    title MVP 로드맵
+    dateFormat  YYYY-MM-DD
+    section Week 1
+    핵심 기능 개발    :a1, 2024-01-01, 7d
+    section Week 2
+    UI/UX 구현       :a2, after a1, 5d
+    테스트           :a3, after a2, 2d
+    section Week 3
+    배포 & 피드백    :a4, after a3, 7d
+```
+
+## MVP 체크리스트
+
+import Checklist from '@site/src/components/Checklist';
+
+<Checklist items={[
+  { id: 'core', label: '핵심 기능 정의' },
+  { id: 'build', label: '기능 개발 완료' },
+  { id: 'deploy', label: '배포 완료' },
+  { id: 'user', label: '첫 사용자 확보' },
+  { id: 'feedback', label: '피드백 수집' },
+  { id: 'iterate', label: '개선 사항 반영' },
+]} />
+

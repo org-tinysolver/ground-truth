@@ -1,0 +1,9 @@
+{
+  "label": "🔧 DevOps",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "인프라 프로비저닝, 클라우드 관리, 모니터링"
+  }
+}
+

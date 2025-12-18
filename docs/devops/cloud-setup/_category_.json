@@ -1,0 +1,9 @@
+{
+  "label": "🔐 클라우드 권한 획득",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "3사 클라우드(AWS, GCP, Azure) 사용 신청 및 권한 획득 가이드"
+  }
+}
+

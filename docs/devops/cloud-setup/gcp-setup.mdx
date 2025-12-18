@@ -1,0 +1,71 @@
+---
+sidebar_position: 3
+---
+
+# GCP 권한 신청 가이드
+
+<span className="cloud-badge gcp">GCP</span>
+
+Google Cloud Platform 계정 및 권한 신청 가이드입니다.
+
+## 신청 프로세스
+
+```mermaid
+flowchart LR
+    A[Google 계정 연동] --> B[프로젝트 접근 요청]
+    B --> C[IAM 역할 할당]
+    C --> D[gcloud 설정]
+    D --> E[완료]
+```
+
+## Step 1: Google 계정 연동
+
+<!-- TODO: Google Workspace 계정 연동 가이드 -->
+
+:::note 계정 정보
+회사 Google Workspace 계정을 사용합니다.
+:::
+
+## Step 2: 프로젝트 접근 요청
+
+<!-- TODO: 프로젝트 접근 요청 방법 -->
+
+### 접근 가능 프로젝트 목록
+
+| 프로젝트 ID | 용도 | 담당자 |
+|------------|------|--------|
+| | | |
+| | | |
+
+## Step 3: IAM 역할 할당
+
+<!-- TODO: 역할별 IAM 정책 -->
+
+### 기본 역할
+
+- `roles/viewer` - 읽기 전용
+- `roles/editor` - 편집 권한
+- `roles/owner` - 소유자 권한
+
+## Step 4: gcloud CLI 설정
+
+```bash
+# gcloud 초기화
+gcloud init
+
+# 프로젝트 설정
+gcloud config set project [PROJECT_ID]
+```
+
+## 문제 해결
+
+:::danger 권한 오류 발생 시
+<!-- TODO: 일반적인 오류 및 해결 방법 -->
+:::
+
+## 관련 리소스
+
+<!-- TODO: 관련 문서 링크 -->
+- 링크 1
+- 링크 2
+
