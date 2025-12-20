@@ -4,57 +4,70 @@ const sidebars = {
     'intro',
     {
       type: 'category',
-      label: '🚀 프로덕트',
+      label: '🧑 사람을 위한 문서',
       items: [
-        'products/overview',
+        'humans/overview',
         {
           type: 'category',
-          label: 'merrymatch',
+          label: '🚀 프로덕트',
           items: [
-            'products/merrymatch/overview',
-            // TODO: 세부 문서 추가 시 여기에 추가
+            'humans/products/overview',
+            {
+              type: 'category',
+              label: 'merrymatch',
+              items: [
+                'humans/products/merrymatch/overview',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'tinysolver-plugins',
+              items: [
+                'humans/products/tinysolver-plugins/overview',
+              ],
+            },
           ],
         },
         {
           type: 'category',
-          label: 'tinysolver-plugins',
+          label: '🔨 빌더스',
           items: [
-            'products/tinysolver-plugins/overview',
-            // TODO: 세부 문서 추가 시 여기에 추가
+            'humans/builders/overview',
+            'humans/builders/poc-guide',
+            'humans/builders/mvp-guide',
+            'humans/builders/open-contribution',
           ],
         },
+        {
+          type: 'category',
+          label: '🔧 DevOps',
+          items: [
+            'humans/devops/overview',
+            'humans/devops/cicd-pipeline',
+            {
+              type: 'category',
+              label: '🔐 클라우드 권한 획득',
+              items: [
+                'humans/devops/cloud-setup/overview',
+                'humans/devops/cloud-setup/aws-setup',
+                'humans/devops/cloud-setup/gcp-setup',
+                'humans/devops/cloud-setup/azure-setup',
+              ],
+            },
+          ],
+        },
+        'humans/examples',
+        'humans/contributing',
       ],
     },
     {
       type: 'category',
-      label: '🔨 빌더스',
+      label: '🤖 AI Agent 문서',
       items: [
-        'builders/overview',
-        'builders/poc-guide',
-        'builders/mvp-guide',
-        'builders/open-contribution',
+        'agents/overview',
+        // TODO: agent 문서 추가 시 여기에 추가
       ],
     },
-    {
-      type: 'category',
-      label: '🔧 DevOps',
-      items: [
-        'devops/overview',
-        'devops/cicd-pipeline',
-        {
-          type: 'category',
-          label: '🔐 클라우드 권한 획득',
-          items: [
-            'devops/cloud-setup/overview',
-            'devops/cloud-setup/aws-setup',
-            'devops/cloud-setup/gcp-setup',
-            'devops/cloud-setup/azure-setup',
-          ],
-        },
-      ],
-    },
-    'examples',
-    'contributing',
   ],
 };
 

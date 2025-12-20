@@ -2,8 +2,8 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'DevOps Onboarding',
-  tagline: '클라우드 인프라 온보딩 가이드',
+  title: 'Ground Truth',
+  tagline: 'AI Company의 진실의 원천',
   favicon: 'img/favicon.ico',
 
   url: 'https://org-tinysolver.github.io',
@@ -47,7 +47,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'DevOps Onboarding',
+        title: 'Ground Truth',
         items: [
           {
             type: 'docSidebar',

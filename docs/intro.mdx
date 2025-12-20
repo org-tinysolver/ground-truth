@@ -3,90 +3,78 @@ sidebar_position: 1
 slug: /
 ---
 
-# 온보딩 허브
+# Ground Truth
 
-팀의 모든 온보딩 가이드를 한 곳에서 확인하세요. 🎉
+**AI Company의 진실의 원천** - 사람과 AI Agent 모두를 위한 문서 허브
 
-import Checklist from '@site/src/components/Checklist';
-
-## 전체 구조
+## 문서 구조
 
 ```mermaid
 flowchart TB
-    subgraph Products["🚀 프로덕트"]
-        P1[madex]
-        P2[mayi]
-        P3[...]
+    subgraph GroundTruth["📚 Ground Truth"]
+        subgraph Humans["🧑 사람을 위한 문서"]
+            H1[프로덕트]
+            H2[빌더스]
+            H3[DevOps]
+        end
+
+        subgraph Agents["🤖 AI Agent 문서"]
+            A1[컨텍스트]
+            A2[작업 지시]
+            A3[...]
+        end
     end
 
-    subgraph Builders["🔨 빌더스"]
-        B1[POC]
-        B2[MVP]
-        B3[Production]
-        B1 --> B2 --> B3
-    end
+    Human[👤 사람] --> Humans
+    AI[🤖 AI Agent] --> Agents
 
-    subgraph DevOps["🔧 DevOps"]
-        D1[클라우드 권한]
-        D2[인프라 프로비저닝]
-        D3[모니터링/운영]
-    end
-
-    Builders --> Products
-    DevOps --> Products
-    DevOps --> Builders
+    Humans -.->|참조| Agents
+    Agents -.->|참조| Humans
 ```
 
-## 온보딩 영역
+## 영역 선택
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
 
-<a href="/products/overview" className="step-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-  <h3>🚀 프로덕트</h3>
-  <p>서비스별 온보딩 가이드</p>
+<a href="/humans/overview" className="step-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+  <h3>🧑 사람을 위한 문서</h3>
+  <p>팀원들이 읽고 이해하기 위한 문서</p>
   <ul>
-    <li>madex - 광고 플랫폼</li>
-    <li>mayi - AI 서비스</li>
-    <li>신규 서비스...</li>
+    <li>프로덕트 온보딩</li>
+    <li>빌더스 문화</li>
+    <li>DevOps 가이드</li>
   </ul>
 </a>
 
-<a href="/builders/overview" className="step-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-  <h3>🔨 빌더스</h3>
-  <p>혼자서 끝까지 만드는 문화</p>
+<a href="/agents/overview" className="step-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+  <h3>🤖 AI Agent 문서</h3>
+  <p>AI Agent가 읽고 실행하기 위한 문서</p>
   <ul>
-    <li>POC → MVP → Production</li>
-    <li>버티컬 슬라이스 개발</li>
-    <li>오픈소스 스타일 확장</li>
-  </ul>
-</a>
-
-<a href="/devops/overview" className="step-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-  <h3>🔧 DevOps</h3>
-  <p>인프라 프로비저닝 & 운영</p>
-  <ul>
-    <li>클라우드 권한 획득</li>
-    <li>IaC / Terraform</li>
-    <li>모니터링 & 로깅</li>
+    <li>컨텍스트 정보</li>
+    <li>작업 지시 형식</li>
+    <li>실행 규칙</li>
   </ul>
 </a>
 
 </div>
 
-## 신규 입사자 체크리스트
+---
 
-<Checklist items={[
-  { id: 'products', label: '프로덕트 구조 파악하기' },
-  { id: 'builders', label: '빌더 문화 이해하기' },
-  { id: 'cloud', label: '클라우드 권한 획득 (AWS, GCP, Azure)' },
-  { id: 'tools', label: '개발 도구 설치' },
-  { id: 'first-pr', label: '첫 번째 PR 올리기' },
-]} />
+## 문서 유형 비교
+
+| 항목 | 🧑 사람용 | 🤖 AI Agent용 |
+|------|----------|---------------|
+| **목적** | 이해와 학습 | 실행과 자동화 |
+| **스타일** | 친근한 설명 | 구조화된 지시 |
+| **포함 요소** | 예시, 스크린샷, 맥락 | 체크리스트, 조건문, 명확한 규칙 |
+| **업데이트** | 필요 시 | 작업 결과 반영 |
 
 ---
 
-:::tip 어디서부터 시작할까?
-- **신규 입사자**: 프로덕트 → 빌더스 → DevOps 순서로
-- **새 프로젝트 시작**: 빌더스 가이드부터
-- **인프라 권한 필요**: DevOps 클라우드 권한 획득부터
+:::tip Ground Truth란?
+**진실의 원천(Source of Truth)** - 모든 정보의 기준점이 되는 문서입니다.
+
+- 문서를 Docusaurus로 보고 읽고 교정
+- 교정된 내용이 다시 Ground Truth로 반영
+- 사람과 AI Agent 모두 이 문서를 기준으로 작업
 :::
