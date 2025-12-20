@@ -65,7 +65,7 @@ const sidebars = {
       label: '🤖 AI Agent 문서',
       items: [
         'agents/overview',
-        // TODO: agent 문서 추가 시 여기에 추가
+        'agents/slack-integration',
       ],
     },
   ],
