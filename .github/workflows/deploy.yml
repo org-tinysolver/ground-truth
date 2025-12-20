@@ -61,6 +61,48 @@ jobs:
         with:
           path: build
 
+      - name: Notify build failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {"type": "plain_text", "text": "❌ 빌드 실패", "emoji": true}
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*Repository:*\n${{ github.repository }}"},
+                      {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"}
+                    ]
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*Commit:*\n${{ github.event.head_commit.message }}"},
+                      {"type": "mrkdwn", "text": "*Author:*\n${{ github.actor }}"}
+                    ]
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "🔍 로그 확인"},
+                        "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    ]
+                  }
+                ]
+              }' \
+              $SLACK_WEBHOOK_URL
+          fi
+
   deploy:
     environment:
       name: github-pages
@@ -72,12 +114,84 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Send Slack notification
+      - name: Notify deploy success
         if: success()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"✅ GitHub Pages 배포 완료\\n\\n🔗 접속 주소: ${{ steps.deployment.outputs.page_url }}\"}" \
-            $SLACK_WEBHOOK_URL
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {"type": "plain_text", "text": "✅ 배포 완료", "emoji": true}
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*Site:*\nGround Truth"},
+                      {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"}
+                    ]
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*Commit:*\n${{ github.event.head_commit.message }}"},
+                      {"type": "mrkdwn", "text": "*Author:*\n${{ github.actor }}"}
+                    ]
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "🌐 사이트 열기"},
+                        "url": "${{ steps.deployment.outputs.page_url }}"
+                      },
+                      {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "📝 커밋 보기"},
+                        "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+                      }
+                    ]
+                  }
+                ]
+              }' \
+              $SLACK_WEBHOOK_URL
+          fi
 
+      - name: Notify deploy failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {"type": "plain_text", "text": "❌ 배포 실패", "emoji": true}
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*Repository:*\n${{ github.repository }}"},
+                      {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"}
+                    ]
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "🔍 로그 확인"},
+                        "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    ]
+                  }
+                ]
+              }' \
+              $SLACK_WEBHOOK_URL
+          fi

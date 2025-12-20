@@ -1,0 +1,90 @@
+---
+sidebar_position: 2
+---
+
+# Slack 연동 설정
+
+GitHub Actions에서 Slack으로 알림을 받기 위한 설정 가이드.
+
+## 설정 단계
+
+### 1. Slack Incoming Webhook 생성
+
+1. [Slack API](https://api.slack.com/apps) 접속
+2. **Create New App** → **From scratch**
+3. App 이름 입력 (예: `Ground Truth Bot`)
+4. Workspace 선택 후 생성
+
+### 2. Incoming Webhooks 활성화
+
+1. 좌측 메뉴 **Incoming Webhooks** 클릭
+2. **Activate Incoming Webhooks** → On
+3. **Add New Webhook to Workspace** 클릭
+4. 알림 받을 채널 선택 (예: `#ground-truth`)
+5. **Webhook URL** 복사
+
+```
+https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### 3. GitHub Secrets 등록
+
+1. GitHub 저장소 → **Settings** → **Secrets and variables** → **Actions**
+2. **New repository secret** 클릭
+3. 입력:
+   - Name: `SLACK_WEBHOOK_URL`
+   - Secret: 복사한 Webhook URL
+
+---
+
+## 알림 종류
+
+| 이벤트 | 알림 내용 |
+|--------|----------|
+| ✅ 배포 성공 | 사이트 URL, 커밋 정보, 작성자 |
+| ❌ 빌드 실패 | 저장소, 브랜치, 로그 링크 |
+| ❌ 배포 실패 | 저장소, 브랜치, 로그 링크 |
+
+## 알림 예시
+
+### 배포 성공
+
+```
+✅ 배포 완료
+───────────────
+Site: Ground Truth
+Branch: main
+Commit: refactor: 문서 구조 재배치
+Author: username
+
+[🌐 사이트 열기] [📝 커밋 보기]
+```
+
+### 빌드 실패
+
+```
+❌ 빌드 실패
+───────────────
+Repository: org-tinysolver/ground-truth
+Branch: main
+Commit: 잘못된 문법
+Author: username
+
+[🔍 로그 확인]
+```
+
+---
+
+## 테스트
+
+1. 저장소에 변경사항 푸시
+2. GitHub Actions 실행 확인
+3. Slack 채널에서 알림 수신 확인
+
+:::tip 웹훅 테스트
+```bash
+curl -X POST -H 'Content-type: application/json' \
+  --data '{"text":"테스트 메시지"}' \
+  YOUR_WEBHOOK_URL
+```
+:::
