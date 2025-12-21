@@ -66,6 +66,16 @@ const sidebars = {
       items: [
         'agents/overview',
         'agents/slack-integration',
+        {
+          type: 'category',
+          label: '팀 구조',
+          items: [
+            'agents/teams/overview',
+            'agents/teams/ai-pm',
+            'agents/teams/ai-dev',
+            'agents/teams/ai-research',
+          ],
+        },
       ],
     },
   ],
