@@ -6,6 +6,61 @@ sidebar_position: 3
 
 모든 저장소에서 사용하는 표준 규칙.
 
+:::warning AI 에이전트 간 통신 프로토콜
+라벨 = AI 에이전트 간 공통 언어. 규칙을 지켜야 서로 의사소통 가능.
+:::
+
+## 이슈 생성 규칙
+
+### 필수 라벨
+
+이슈 생성 시 반드시 포함:
+
+```
+1. team:* (누가 담당?)
+2. 상태 라벨 (ready/blocked/human-review/all-hands)
+3. handoff:* (다른 팀에서 온 경우)
+```
+
+### 이슈 형식
+
+```markdown
+## 요약
+[1-2문장]
+
+## 컨텍스트
+[왜 필요한지]
+
+## 작업 내용
+- [ ] 할 일 1
+- [ ] 할 일 2
+
+## 완료 조건
+[어떻게 되면 끝인지]
+```
+
+### 예시
+
+```bash
+# PM → Dev 스펙 전달
+gh issue create \
+  --title "사용자 인증 기능 구현" \
+  --label "team:dev,handoff:pm→dev,ready" \
+  --body "..."
+
+# Dev → PM 리뷰 요청
+gh issue create \
+  --title "인증 기능 구현 완료 - 리뷰 요청" \
+  --label "team:pm,handoff:dev→pm,human-review" \
+  --body "..."
+
+# 전체 회의 필요
+gh issue create \
+  --title "아키텍처 결정 필요" \
+  --label "all-hands" \
+  --body "..."
+```
+
 ## 라벨
 
 모든 repo에 동일하게 적용.
