@@ -1,0 +1,153 @@
+---
+sidebar_position: 1
+---
+
+# AI 팀 구조
+
+Ground Truth를 원천으로 하는 AI 팀 구조와 운영 방식.
+
+## 팀 구성
+
+```mermaid
+flowchart TB
+    subgraph GroundTruth["📚 Ground Truth (원천)"]
+        GT[문서 & 컨텍스트]
+    end
+
+    subgraph Teams["🤖 AI Teams"]
+        PM[AI PM<br/>제품 기획 & 우선순위]
+        DEV[AI Dev<br/>구현 & 배포]
+        RESEARCH[AI Research<br/>탐색 & 검증]
+    end
+
+    subgraph Human["👤 Human Oversight"]
+        SLACK[Slack 리포트]
+        FEEDBACK[피드백 & 승인]
+    end
+
+    GT --> PM
+    GT --> DEV
+    GT --> RESEARCH
+
+    PM --> SLACK
+    DEV --> SLACK
+    RESEARCH --> SLACK
+
+    SLACK --> FEEDBACK
+    FEEDBACK --> GT
+```
+
+## 핵심 원칙
+
+### 1. 마이크로 사이클
+
+> **가장 작은 검증 가능한 단위로 작업하고, 점진적으로 확장**
+
+```mermaid
+flowchart LR
+    A[작은 목표] --> B[빠른 실행]
+    B --> C[검증]
+    C --> D{통과?}
+    D -->|Yes| E[다음 사이클]
+    D -->|No| F[조정]
+    F --> A
+    E --> A
+```
+
+**사이클 원칙:**
+- 1 사이클 = 1 검증 가능한 결과물
+- 인간 검증 필요시 → Slack 리포트 후 대기
+- 피드백 반영 후 이어서 진행
+- 점진적 확장 (작게 시작 → 크게 성장)
+
+### 2. 위임 구조
+
+각 팀은 세부 작업을 서브 에이전트에게 위임 가능:
+
+```mermaid
+flowchart TB
+    subgraph PM["AI PM"]
+        PM_MAIN[PM Lead]
+        PM_SUB1[Spec Writer]
+        PM_SUB2[Priority Analyzer]
+    end
+
+    subgraph DEV["AI Dev"]
+        DEV_MAIN[Dev Lead]
+        DEV_SUB1[Frontend Agent]
+        DEV_SUB2[Backend Agent]
+        DEV_SUB3[Test Agent]
+    end
+
+    subgraph RESEARCH["AI Research"]
+        RES_MAIN[Research Lead]
+        RES_SUB1[Explorer Agent]
+        RES_SUB2[Validator Agent]
+    end
+
+    PM_MAIN --> PM_SUB1
+    PM_MAIN --> PM_SUB2
+    DEV_MAIN --> DEV_SUB1
+    DEV_MAIN --> DEV_SUB2
+    DEV_MAIN --> DEV_SUB3
+    RES_MAIN --> RES_SUB1
+    RES_MAIN --> RES_SUB2
+```
+
+### 3. Slack 리포트 프로토콜
+
+인간 검증이 필요한 상황:
+
+| 상황 | 액션 | 대기 |
+|------|------|------|
+| 중요 결정 | Slack 리포트 + 승인 요청 | 승인까지 대기 |
+| 불확실성 | Slack 질문 | 답변까지 대기 |
+| 사이클 완료 | Slack 결과 공유 | 대기 없이 진행 |
+| 블로커 발생 | Slack 에스컬레이션 | 해결까지 대기 |
+
+## 팀별 역할
+
+| 팀 | 핵심 역할 | 주요 산출물 |
+|----|----------|------------|
+| [AI PM](./ai-pm) | 제품 방향, 우선순위, 스펙 | PRD, 로드맵, 백로그 |
+| [AI Dev](./ai-dev) | 구현, 테스트, 배포 | 코드, 테스트, 문서 |
+| [AI Research](./ai-research) | 기술 탐색, 가설 검증 | 리서치 노트, PoC |
+
+## 작업 흐름
+
+```mermaid
+sequenceDiagram
+    participant GT as Ground Truth
+    participant PM as AI PM
+    participant DEV as AI Dev
+    participant RES as AI Research
+    participant SLACK as Slack
+    participant HUMAN as Human
+
+    PM->>GT: 컨텍스트 읽기
+    PM->>PM: 작은 스펙 작성
+    PM->>SLACK: 스펙 리포트
+    SLACK->>HUMAN: 알림
+    HUMAN->>SLACK: 승인/피드백
+
+    alt 승인됨
+        PM->>DEV: 스펙 전달
+        DEV->>DEV: 마이크로 구현
+        DEV->>SLACK: 결과 리포트
+    else 수정 필요
+        PM->>PM: 피드백 반영
+    end
+
+    RES->>GT: 리서치 필요 영역 확인
+    RES->>RES: 탐색 & 검증
+    RES->>SLACK: 인사이트 공유
+    RES->>GT: 결과 반영
+```
+
+---
+
+:::tip 마이크로 사이클의 힘
+작은 사이클은 리스크를 줄이고, 빠른 학습을 가능하게 합니다.
+- ❌ 2주 개발 후 검증
+- ✅ 2시간 개발 → 검증 → 피드백 → 반복
+:::
