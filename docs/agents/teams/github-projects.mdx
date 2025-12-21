@@ -1,0 +1,111 @@
+---
+sidebar_position: 6
+---
+
+# GitHub Projects 구조
+
+Organization 레벨 프로젝트 관리 체계.
+
+## 프로젝트 구조
+
+```mermaid
+flowchart TB
+    subgraph Org["org-tinysolver"]
+        HITL[Human in the Loop<br/>인간 검증 필요]
+
+        subgraph Teams["팀 프로젝트"]
+            PM[AI PM]
+            DEV[AI Dev]
+            RES[AI Research]
+        end
+
+        subgraph Products["제품 프로젝트"]
+            P1[Workqueue Manager]
+            P2[...]
+        end
+    end
+```
+
+## 프로젝트 목록
+
+| 프로젝트 | 목적 | 담당 |
+|----------|------|------|
+| **Human in the Loop** | 인간 승인/검증 대기 | 전체 |
+| **AI PM** | PM 팀 작업 트래킹 | AI PM |
+| **AI Dev** | Dev 팀 작업 트래킹 | AI Dev |
+| **AI Research** | Research 팀 작업 트래킹 | AI Research |
+| **Workqueue Manager** | 제품별 트래킹 | AI PM + Dev |
+
+## Human in the Loop
+
+인간 검증이 필요한 작업 집중 관리.
+
+```mermaid
+flowchart LR
+    A[AI 작업] --> B{검증 필요?}
+    B -->|Yes| C[Human in the Loop]
+    B -->|No| D[팀 프로젝트]
+    C --> E[Slack 알림]
+    E --> F[인간 검증]
+    F --> G[승인/피드백]
+```
+
+### 상태
+
+| 상태 | 설명 |
+|------|------|
+| 대기 | 검증 대기 중 |
+| 검토중 | 인간이 검토 중 |
+| 승인 | 승인됨, 진행 가능 |
+| 반려 | 수정 필요 |
+
+## 라벨
+
+팀/유형 식별용 라벨.
+
+| 라벨 | 색상 | 용도 |
+|------|------|------|
+| `team:pm` | 🟣 보라 | AI PM 담당 |
+| `team:dev` | 🔵 파랑 | AI Dev 담당 |
+| `team:research` | 🟢 초록 | AI Research 담당 |
+| `human-review` | 🔴 빨강 | 인간 검증 필요 |
+| `blocked` | 🟠 주황 | 블로커 있음 |
+
+## 설정 방법
+
+### 1. 기존 프로젝트 삭제
+
+GitHub → org-tinysolver → Projects → 각 프로젝트 Settings → Delete
+
+### 2. 새 프로젝트 생성
+
+```
+org-tinysolver → Projects → New project
+
+1. Human in the Loop (Board)
+2. AI PM (Board)
+3. AI Dev (Board)
+4. AI Research (Board)
+5. Workqueue Manager (Board)
+```
+
+### 3. 컬럼 구조
+
+**Human in the Loop:**
+- 대기
+- 검토중
+- 승인
+- 반려
+
+**팀/제품 프로젝트:**
+- Backlog
+- In Progress
+- Done
+
+---
+
+:::tip 원칙
+- 원천은 `workqueue/*.md`
+- GitHub Projects는 시각화/협업용
+- Human in the Loop는 병목 최소화
+:::

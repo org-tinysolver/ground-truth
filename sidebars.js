@@ -75,6 +75,7 @@ const sidebars = {
             'agents/teams/ai-dev',
             'agents/teams/ai-research',
             'agents/teams/workqueue-manager',
+            'agents/teams/github-projects',
           ],
         },
       ],
