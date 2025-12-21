@@ -74,6 +74,7 @@ const sidebars = {
             'agents/teams/ai-pm',
             'agents/teams/ai-dev',
             'agents/teams/ai-research',
+            'agents/teams/workqueue-manager',
           ],
         },
       ],
