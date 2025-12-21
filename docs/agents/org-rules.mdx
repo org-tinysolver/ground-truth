@@ -1,0 +1,106 @@
+---
+sidebar_position: 3
+---
+
+# 조직 공통 규칙
+
+모든 저장소에서 사용하는 표준 규칙.
+
+## 라벨
+
+모든 repo에 동일하게 적용.
+
+### 팀 식별
+
+| 라벨 | 색상 | 용도 |
+|------|------|------|
+| `team:pm` | 🟣 `#7c3aed` | AI PM 담당 |
+| `team:dev` | 🔵 `#2563eb` | AI Dev 담당 |
+| `team:research` | 🟢 `#059669` | AI Research 담당 |
+
+### 핸드오프
+
+| 라벨 | 설명 |
+|------|------|
+| `handoff:pm→dev` | PM → Dev 전달 |
+| `handoff:pm→research` | PM → Research 전달 |
+| `handoff:dev→pm` | Dev → PM 전달 |
+| `handoff:research→pm` | Research → PM 전달 |
+| `handoff:research→dev` | Research → Dev 전달 |
+
+### 상태
+
+| 라벨 | 색상 | 용도 |
+|------|------|------|
+| `human-review` | 🔴 `#dc2626` | 인간 검증 필요 |
+| `blocked` | 🟠 `#ea580c` | 블로커 있음 |
+| `ready` | 🟢 `#16a34a` | 작업 시작 가능 |
+| `all-hands` | 🟡 `#ca8a04` | 전체 회의 필요 |
+
+## Slack 리포트 규칙
+
+### 반드시 리포트
+
+| 상황 | 액션 |
+|------|------|
+| `human-review` | Slack + 승인까지 대기 |
+| `all-hands` | Slack + 회의 소집 |
+| `blocked` | Slack + 도움 요청 |
+| 사이클 완료 | Slack 공유 (대기 불필요) |
+
+### 리포트 불필요
+
+- 팀 내부 작업
+- `ready` 상태 픽업
+- 작은 수정 (커밋으로 충분)
+
+## GitHub Projects (org-tinysolver)
+
+| 프로젝트 | 목적 |
+|----------|------|
+| Human in the Loop | 인간 검증 대기 |
+| AI PM | PM 작업 트래킹 |
+| AI Dev | Dev 작업 트래킹 |
+| AI Research | Research 작업 트래킹 |
+
+## 마이크로 사이클
+
+모든 팀 공통 원칙.
+
+```mermaid
+flowchart LR
+    A[작은 목표] --> B[실행]
+    B --> C[검증]
+    C --> D{통과?}
+    D -->|Yes| E[다음 사이클]
+    D -->|No| F[조정]
+    F --> A
+```
+
+- 2시간 이내 검증 가능한 단위
+- 인간 검증 필요시 Slack → 대기 → 피드백 → 진행
+- 점진적 확장
+
+## 새 저장소 설정
+
+```bash
+# 라벨 생성 (gh CLI)
+gh label create "team:pm" --color "7c3aed"
+gh label create "team:dev" --color "2563eb"
+gh label create "team:research" --color "059669"
+gh label create "human-review" --color "dc2626"
+gh label create "blocked" --color "ea580c"
+gh label create "ready" --color "16a34a"
+gh label create "all-hands" --color "ca8a04"
+gh label create "handoff:pm→dev" --color "6b7280"
+gh label create "handoff:pm→research" --color "6b7280"
+gh label create "handoff:dev→pm" --color "6b7280"
+gh label create "handoff:research→pm" --color "6b7280"
+gh label create "handoff:research→dev" --color "6b7280"
+```
+
+---
+
+:::tip 원천은 Ground Truth
+이 문서가 조직 규칙의 원천. 모든 repo는 이 규칙을 따름.
+:::

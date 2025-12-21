@@ -65,6 +65,7 @@ const sidebars = {
       label: '🤖 AI Agent 문서',
       items: [
         'agents/overview',
+        'agents/org-rules',
         'agents/slack-integration',
         {
           type: 'category',
