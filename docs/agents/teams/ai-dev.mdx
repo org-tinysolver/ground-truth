@@ -44,14 +44,28 @@ flowchart LR
 ```mermaid
 flowchart TB
     DEV_LEAD[Dev Lead]
+    FULLSTACK[Fullstack Agent]
     FE[Frontend Agent]
     BE[Backend Agent]
     TEST[Test Agent]
 
-    DEV_LEAD --> FE
-    DEV_LEAD --> BE
+    DEV_LEAD -->|POC/긴급| FULLSTACK
+    DEV_LEAD -->|일반| FE
+    DEV_LEAD -->|일반| BE
     DEV_LEAD --> TEST
 ```
+
+### 작업 모드
+
+| 모드 | 설명 | 사용 시점 |
+|------|------|----------|
+| **Fullstack 모드** | 단일 에이전트가 FE+BE 모두 처리 | POC, 긴급 이슈, 작은 기능 |
+| **분할 모드** | Frontend/Backend 에이전트 분리 | 복잡한 기능, 대규모 작업 |
+
+:::tip POC 및 긴급 이슈
+POC나 긴급한 이슈는 프론트엔드/백엔드를 나누지 않습니다.
+Fullstack 에이전트가 end-to-end로 빠르게 구현하고 검증합니다.
+:::
 
 ## Slack 리포트 템플릿
 
