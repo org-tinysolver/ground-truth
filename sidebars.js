@@ -96,6 +96,7 @@ const sidebars = {
             'agents/teams/ai-research',
             'agents/teams/workqueue-manager',
             'agents/teams/github-projects',
+            'agents/teams/auto-delegation',
           ],
         },
       ],
