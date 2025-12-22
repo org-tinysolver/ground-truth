@@ -4,5 +4,17 @@
       "Bash(gh:*)",
       "Bash(git:*)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "scripts/claude-code/session-start.sh"
+          }
+        ]
+      }
+    ]
   }
 }
