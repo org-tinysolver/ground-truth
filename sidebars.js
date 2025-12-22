@@ -14,6 +14,15 @@ const sidebars = {
             'humans/products/overview',
             {
               type: 'category',
+              label: '🤖 AI Company',
+              items: [
+                'humans/products/ai-pm/overview',
+                'humans/products/ai-devteam/overview',
+                'humans/products/ai-research/overview',
+              ],
+            },
+            {
+              type: 'category',
               label: 'merrymatch',
               items: [
                 'humans/products/merrymatch/overview',
@@ -67,6 +76,16 @@ const sidebars = {
         'agents/overview',
         'agents/org-rules',
         'agents/slack-integration',
+        {
+          type: 'category',
+          label: '📋 규칙 & 기준',
+          items: [
+            'agents/rules/overview',
+            'agents/rules/hitl-boundary',
+            'agents/rules/branch-protection',
+            'agents/rules/delegation-protocol',
+          ],
+        },
         {
           type: 'category',
           label: '팀 구조',

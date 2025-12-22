@@ -10,19 +10,32 @@ sidebar_position: 1
 
 ```mermaid
 flowchart LR
+    subgraph AICompany["🤖 AI Company"]
+        AI_PM[AI PM]
+        AI_DEV[AI Dev Team]
+        AI_RESEARCH[AI Research]
+    end
+
     subgraph Active["🟢 운영 중"]
         MERRYMATCH[merrymatch]
         PLUGINS[tinysolver-plugins]
     end
 
-    subgraph Building["🟡 개발 중"]
-        NEW1[???]
-    end
-
-    subgraph Planned["⚪ 계획"]
-        FUTURE[...]
-    end
+    AI_PM --> AI_DEV
+    AI_PM --> AI_RESEARCH
+    AI_DEV --> Active
+    AI_RESEARCH --> AI_PM
 ```
+
+## AI Company
+
+AI 에이전트로 구성된 회사입니다. 각 에이전트가 역할을 분담하여 제품을 기획, 개발, 조사합니다.
+
+| 서비스 | 상태 | 설명 | 역할 |
+|--------|------|------|------|
+| [AI PM](./ai-pm/overview) | 🟢 운영 | 지능형 프로젝트 매니저 | 기획, 위임, HITL 관리 |
+| [AI Dev Team](./ai-devteam/overview) | 🟢 운영 | AI 개발팀 Monorepo | 구현, 테스트, 배포 |
+| [AI Research](./ai-research/overview) | 🟢 운영 | 리서치 에이전트팀 | 조사, 분석, PoC |
 
 ## 서비스 목록
 
