@@ -1,0 +1,60 @@
+# AI DevTeam Configuration
+# AI 기반 개발팀 - 실제 코드 작성 및 배포 담당
+
+team:
+  id: devteam
+  name: AI DevTeam
+  description: AI 에이전트 기반 개발팀, 코드 작성 및 배포 수행
+  role: development  # development | research | design
+
+repository:
+  url: https://github.com/org-tinysolver/ai-devteam
+  default_branch: main
+  type: monorepo
+
+  # Monorepo 구조
+  structure:
+    apps: "apps/"           # 실제 서비스들 (tinysolver-me, etc.)
+    packages: "packages/"   # 공유 패키지
+    tools: "tools/"         # 내부 도구
+
+# GitHub Projects Board
+board:
+  name: "[TEAM] DevTeam"
+  number: 2
+  url: https://github.com/orgs/org-tinysolver/projects/2
+
+# 이 팀이 수행하는 작업 유형
+capabilities:
+  - feature      # 새 기능 구현
+  - bugfix       # 버그 수정
+  - refactor     # 리팩토링
+  - infra        # 인프라/설정
+  - test         # 테스트 작성
+
+tech_stack:
+  languages:
+    - typescript
+    - javascript
+  frameworks:
+    - react
+    - remix
+    - next.js
+  tools:
+    - pnpm
+    - turbo
+    - eslint
+    - prettier
+
+# 위임 시 필수 정보
+delegation_requirements:
+  - files_to_modify    # 수정할 파일 목록
+  - acceptance_criteria  # 완료 조건
+  - dependencies       # 선행 작업
+
+keywords:
+  - devteam
+  - 개발팀
+  - 코드
+  - 구현
+  - 배포
