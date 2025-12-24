@@ -1,0 +1,125 @@
+# MerryMatch Project Configuration
+# 크리스마스 기간한정 소원 기반 랜덤 채팅 서비스
+
+project:
+  id: merrymatch
+  name: MerryMatch
+  description: 크리스마스 기간한정(12/22~24) 소원 기반 랜덤 채팅 - 비슷한 소원을 가진 사람들끼리 최대 8명 매칭
+  owner: org-tinysolver
+  status: active  # active | paused | completed | archived
+
+# 기간한정 이벤트
+event:
+  type: seasonal
+  start_date: 2024-12-22
+  end_date: 2024-12-24
+  timezone: Asia/Seoul
+
+# 담당 팀
+assigned_team: devteam
+
+# 구현체 위치
+implementation:
+  # 현재 목업
+  mockup: https://github.com/choigawoon/merrymatch
+  # 목표 위치 (ai-devteam monorepo 내)
+  target: org-tinysolver/ai-devteam/apps/merrymatch
+
+# 🔥 가장 중요: 왜 이 프로젝트를 하는가?
+motivation:
+  problem: |
+    크리스마스에 비슷한 마음/소원을 가진 사람들과 연결되고 싶은 니즈.
+    익명의 따뜻한 소셜 경험 제공.
+  why_now: |
+    크리스마스 시즌 (12/22~24) 맞춤 기간한정 이벤트.
+    지금 시작해야 D-8 내 런칭 가능.
+  expected_outcome: |
+    - 소원 입력 → AI가 비슷한 소원 매칭
+    - 최대 8명 채팅방 생성
+    - 기간 종료 후 자연스럽게 서비스 종료
+  personal_value: |
+    빠른 프로토타이핑 경험. 시즌 이벤트 기획/개발 역량 확인.
+
+# 비슷한 기존 프로젝트 확인 (크로스체크)
+related_check:
+  checked_at: 2024-12-14
+  similar_projects: []  # 없음 - tinysolver-me와 완전히 다른 도메인
+  decision: "새로 시작 - 기존에 유사 프로젝트 없음 (소셜 채팅 vs 포트폴리오)"
+
+repository:
+  # ai-devteam monorepo 사용
+  url: https://github.com/org-tinysolver/ai-devteam
+  default_branch: main
+  path_in_repo: apps/merrymatch  # monorepo 내 경로
+
+# GitHub Projects Board (프로젝트 보드)
+board:
+  name: "[PRODUCT] MerryMatch"
+  number: 4
+  url: https://github.com/orgs/org-tinysolver/projects/4
+
+deployment:
+  type: web
+  platform: cloudflare-pages
+  url: https://merrymatch.tinysolver.me  # 또는 별도 도메인
+  auto_deploy: true
+  deploy_branch: main
+
+tech_stack:
+  framework: react
+  build_tool: vite
+  language: typescript
+  styling:
+    - tailwindcss
+  realtime:
+    provider: firebase  # 또는 supabase
+    features:
+      - realtime-database
+      - authentication
+  ai:
+    provider: gemini
+    purpose: wish-matching
+
+# 핵심 기능
+features:
+  - name: wish-input
+    description: 사용자가 자신의 소원/마음 입력
+  - name: ai-matching
+    description: Gemini API로 비슷한 소원 가진 사람 매칭
+  - name: chat-room
+    description: 최대 8명 그룹 채팅방
+  - name: dynamic-join
+    description: 나간 자리에 새 유저 입장 가능
+
+build:
+  command: npm run build
+  output_dir: dist
+  node_version: "20"
+
+environment:
+  development:
+    url: http://localhost:5173
+    command: npm run dev
+  production:
+    url: https://merrymatch.tinysolver.me
+
+keywords:
+  - merrymatch
+  - christmas
+  - chat
+  - matching
+  - wish
+  - seasonal
+  - event
+
+hitl_checkpoints:
+  required:
+    - before_deploy_production
+    - firebase_security_rules
+  optional:
+    - ai_prompt_review
+
+notifications:
+  on_deploy: true
+  on_error: true
+  on_hitl_required: true
