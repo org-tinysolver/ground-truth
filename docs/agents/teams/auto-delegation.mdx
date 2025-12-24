@@ -20,34 +20,34 @@ flowchart TB
         ISSUE[Issue 생성 + handoff:pm→dev]
     end
 
-    subgraph Auto["2️⃣ 자동화"]
+    subgraph Auto["2️⃣ 자동 알림"]
         DETECT[GitHub Actions 트리거]
-        SLACK1[Slack: 작업 시작 알림]
-        CLAUDE[Claude Code 실행]
+        SLACK[Slack 알림]
+        COMMENT[Issue 코멘트]
     end
 
-    subgraph Dev["3️⃣ AI Dev"]
-        PARSE[이슈 분석]
+    subgraph Manual["3️⃣ 수동 실행"]
+        HUMAN[알림 확인]
+        CLAUDE[Claude Code 세션 시작]
+        DEVCYCLE[/dev-cycle 실행]
+    end
+
+    subgraph Dev["4️⃣ AI Dev"]
         IMPL[구현]
         TEST[테스트]
         PR[PR 생성]
     end
 
-    subgraph Report["4️⃣ 리포트"]
-        COMMENT[Issue 코멘트]
-        SLACK2[Slack: 완료 알림]
-    end
-
     SPEC --> ISSUE
     ISSUE --> DETECT
-    DETECT --> SLACK1
-    SLACK1 --> CLAUDE
-    CLAUDE --> PARSE
-    PARSE --> IMPL
+    DETECT --> SLACK
+    DETECT --> COMMENT
+    SLACK --> HUMAN
+    HUMAN --> CLAUDE
+    CLAUDE --> DEVCYCLE
+    DEVCYCLE --> IMPL
     IMPL --> TEST
     TEST --> PR
-    PR --> COMMENT
-    PR --> SLACK2
 ```
 
 ## 설정 방법
@@ -58,7 +58,6 @@ GitHub 레포지토리 Settings → Secrets에 추가:
 
 | Secret | 설명 |
 |--------|------|
-| `ANTHROPIC_API_KEY` | Claude API 키 |
 | `SLACK_WEBHOOK_URL` | Slack 웹훅 URL |
 
 ### 2. 라벨 설정
@@ -96,32 +95,28 @@ gh issue create \
 다크/라이트 전환 동작"
 ```
 
-### 자동 실행 흐름
+### 실행 흐름
 
 1. Issue 생성 시 `handoff:pm→dev` 라벨 감지
 2. GitHub Actions 워크플로우 자동 시작
-3. Slack에 "작업 시작" 알림
-4. Claude Code가 이슈 분석 및 구현
-5. 브랜치 생성 및 PR 오픈
-6. Issue에 완료 코멘트
-7. Slack에 "작업 완료" 알림
+3. Slack에 작업 요청 알림
+4. Issue에 작업 방법 코멘트
+5. **수동:** Claude Code 세션에서 `/dev-cycle` 실행
+6. 구현 및 PR 생성
 
 ## Slack 알림 예시
 
-### 작업 시작
 ```
-🤖 AI Dev 작업 시작
+🎯 AI Dev 작업 요청
 이슈: #123 Ground Truth 다크 모드 추가
-트리거: handoff:pm→dev
-[📋 이슈 보기]
-```
+요청자: pm-bot
 
-### 작업 완료
-```
-✅ AI Dev 작업 완료
-이슈: #123
-브랜치: ai-dev/issue-123
-[📋 이슈] [🔍 Actions 로그]
+작업 시작 방법:
+gh issue view 123 --repo org-tinysolver/ground-truth
+
+# Claude Code에서 /dev-cycle 실행
+
+[📋 이슈 보기] [🚀 Claude Code 열기]
 ```
 
 ## 트리거 조건
@@ -132,15 +127,14 @@ gh issue create \
 | `handoff:pm→research` | AI Research | (예정) |
 | `handoff:dev→pm` | AI PM | (예정) |
 
-## 제한사항
+## 현재 방식
 
-- 현재 `handoff:pm→dev`만 자동화됨
-- Human 승인이 필요한 작업은 `human-review` 라벨로 중단
-- PR은 자동 생성되지만 머지는 수동
+- **알림만 자동**: Slack 알림 + Issue 코멘트
+- **실행은 수동**: Claude Code 세션에서 직접 `/dev-cycle` 실행
+- **API 키 불필요**: ANTHROPIC_API_KEY 없이 동작
 
 ## 확장 계획
 
 1. `handoff:pm→research` 트리거 추가
 2. `handoff:dev→pm` 리뷰 요청 자동화
-3. 자동 테스트 실행 및 결과 리포트
-4. 복잡한 작업의 서브태스크 분할
+3. Self-hosted Runner로 완전 자동화 (선택적)

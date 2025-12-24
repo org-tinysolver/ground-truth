@@ -5,199 +5,73 @@ on:
     types: [labeled]
 
 jobs:
-  dispatch-to-dev:
+  notify-dev:
     # handoff:pm→dev 라벨이 붙은 이슈만 처리
     if: github.event.label.name == 'handoff:pm→dev'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Extract issue info
-        id: issue
-        run: |
-          echo "issue_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
-          echo "issue_title=${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
-          echo "issue_body<<EOF" >> $GITHUB_OUTPUT
-          echo "${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Notify Slack - Dev Started
-        if: ${{ vars.SLACK_WEBHOOK_URL != '' }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-            --data '{
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {"type": "plain_text", "text": "🤖 AI Dev 작업 시작", "emoji": true}
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {"type": "mrkdwn", "text": "*이슈:*\n#${{ steps.issue.outputs.issue_number }} ${{ github.event.issue.title }}"},
-                    {"type": "mrkdwn", "text": "*트리거:*\nhandoff:pm→dev"}
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {"type": "plain_text", "text": "📋 이슈 보기"},
-                      "url": "${{ github.event.issue.html_url }}"
-                    }
-                  ]
-                }
-              ]
-            }' \
-            $SLACK_WEBHOOK_URL
-
-      # Claude Code 실행 (GitHub Actions에서 Claude Code 사용)
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Run Dev Cycle
-        id: dev_cycle
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          # 이슈 정보를 파일로 저장
-          cat > /tmp/issue-context.md << 'ISSUE_EOF'
-          # Issue #${{ steps.issue.outputs.issue_number }}: ${{ github.event.issue.title }}
-
-          ${{ github.event.issue.body }}
-          ISSUE_EOF
-
-          # Claude Code 실행 (비대화형 모드)
-          claude -p "
-          당신은 AI Dev입니다. 다음 이슈를 처리하세요:
-
-          $(cat /tmp/issue-context.md)
-
-          작업 순서:
-          1. 이슈 내용 분석
-          2. 필요한 코드 변경 수행
-          3. 테스트 실행 (npm run build)
-          4. 변경사항 커밋
-
-          완료 후 결과를 요약해주세요.
-          " --output-format json > /tmp/result.json 2>&1 || true
-
-          echo "result_file=/tmp/result.json" >> $GITHUB_OUTPUT
-
-      - name: Create branch and commit
-        run: |
-          BRANCH_NAME="ai-dev/issue-${{ steps.issue.outputs.issue_number }}"
-          git config user.name "AI Dev Bot"
-          git config user.email "ai-dev@tinysolver.org"
-
-          # 변경사항이 있으면 커밋
-          if [[ -n $(git status --porcelain) ]]; then
-            git checkout -b "$BRANCH_NAME"
-            git add -A
-            git commit -m "fix(#${{ steps.issue.outputs.issue_number }}): ${{ github.event.issue.title }}"
-            git push origin "$BRANCH_NAME"
-            echo "BRANCH_CREATED=true" >> $GITHUB_ENV
-            echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-          else
-            echo "BRANCH_CREATED=false" >> $GITHUB_ENV
-          fi
-
-      - name: Create Pull Request
-        if: env.BRANCH_CREATED == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create \
-            --title "fix(#${{ steps.issue.outputs.issue_number }}): ${{ github.event.issue.title }}" \
-            --body "## 자동 생성된 PR
-
-          관련 이슈: #${{ steps.issue.outputs.issue_number }}
-
-          ### AI Dev 작업 결과
-          이 PR은 AI Dev에 의해 자동 생성되었습니다.
-
-          ### 체크리스트
-          - [ ] 코드 리뷰 완료
-          - [ ] 테스트 통과 확인
-          - [ ] Human 승인
-          " \
-            --label "ai-generated"
-
-      - name: Comment on issue
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ "$BRANCH_CREATED" == "true" ]]; then
-            gh issue comment ${{ steps.issue.outputs.issue_number }} \
-              --body "## 🤖 AI Dev 작업 완료
-
-          PR이 생성되었습니다: ${{ env.BRANCH_NAME }}
-
-          ### 다음 단계
-          - [ ] PR 리뷰
-          - [ ] 머지 승인"
-          else
-            gh issue comment ${{ steps.issue.outputs.issue_number }} \
-              --body "## 🤖 AI Dev 분석 완료
-
-          이슈를 분석했지만 코드 변경이 필요하지 않거나, 추가 정보가 필요합니다.
-
-          상세 내용은 Actions 로그를 확인해주세요."
-          fi
-
-      - name: Notify Slack - Dev Completed
-        if: always()
+      - name: Notify Slack - New Task for Dev
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -n "$SLACK_WEBHOOK_URL" ]; then
-            STATUS_EMOJI="✅"
-            STATUS_TEXT="완료"
-            if [ "${{ job.status }}" != "success" ]; then
-              STATUS_EMOJI="❌"
-              STATUS_TEXT="실패"
-            fi
-
             curl -X POST -H 'Content-type: application/json' \
-              --data "{
-                \"blocks\": [
+              --data '{
+                "blocks": [
                   {
-                    \"type\": \"header\",
-                    \"text\": {\"type\": \"plain_text\", \"text\": \"$STATUS_EMOJI AI Dev 작업 $STATUS_TEXT\", \"emoji\": true}
+                    "type": "header",
+                    "text": {"type": "plain_text", "text": "🎯 AI Dev 작업 요청", "emoji": true}
                   },
                   {
-                    \"type\": \"section\",
-                    \"fields\": [
-                      {\"type\": \"mrkdwn\", \"text\": \"*이슈:*\n#${{ steps.issue.outputs.issue_number }}\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*브랜치:*\n${BRANCH_NAME:-없음}\"}
+                    "type": "section",
+                    "fields": [
+                      {"type": "mrkdwn", "text": "*이슈:*\n#${{ github.event.issue.number }} ${{ github.event.issue.title }}"},
+                      {"type": "mrkdwn", "text": "*요청자:*\n${{ github.event.sender.login }}"}
                     ]
                   },
                   {
-                    \"type\": \"actions\",
-                    \"elements\": [
+                    "type": "section",
+                    "text": {"type": "mrkdwn", "text": "*작업 시작 방법:*\n```\ngh issue view ${{ github.event.issue.number }} --repo ${{ github.repository }}\n\n# Claude Code에서 /dev-cycle 실행\n```"}
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
                       {
-                        \"type\": \"button\",
-                        \"text\": {\"type\": \"plain_text\", \"text\": \"📋 이슈\"},
-                        \"url\": \"${{ github.event.issue.html_url }}\"
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "📋 이슈 보기", "emoji": true},
+                        "url": "${{ github.event.issue.html_url }}",
+                        "style": "primary"
                       },
                       {
-                        \"type\": \"button\",
-                        \"text\": {\"type\": \"plain_text\", \"text\": \"🔍 Actions 로그\"},
-                        \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "🚀 Claude Code 열기", "emoji": true},
+                        "url": "https://claude.ai/code"
                       }
                     ]
                   }
                 ]
-              }" \
+              }' \
               $SLACK_WEBHOOK_URL
+          else
+            echo "SLACK_WEBHOOK_URL not configured, skipping notification"
           fi
+
+      - name: Add comment to issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "## 🤖 AI Dev 알림 전송됨
+
+          Slack에 작업 요청이 전달되었습니다.
+
+          ### 작업 시작 방법
+          1. Claude Code 세션 열기
+          2. 이 레포지토리 클론
+          3. \`/dev-cycle\` 실행
+
+          \`\`\`bash
+          gh issue view ${{ github.event.issue.number }} --repo ${{ github.repository }}
+          \`\`\`"
