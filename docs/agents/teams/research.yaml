@@ -1,0 +1,55 @@
+# AI Research Team Configuration
+# AI 기반 리서치팀 - 조사 및 문서 작성 담당
+
+team:
+  id: research
+  name: AI Research
+  description: AI 에이전트 기반 리서치팀, 기술 조사 및 문서 작성 수행
+  role: research  # development | research | design
+
+repository:
+  url: https://github.com/org-tinysolver/ai-research
+  default_branch: main
+  type: knowledge-base
+
+# GitHub Projects Board
+board:
+  name: "[TEAM] Research"
+  number: 3
+  url: https://github.com/orgs/org-tinysolver/projects/3
+
+  # 결과물 저장 위치
+  structure:
+    reports: "/"              # 메인 리포트
+    comparisons: "ai-tools/"  # 도구 비교
+    pocs: "poc/"              # POC 분석
+    automation: "automation/" # 자동화 관련
+    archives: "archives/"     # 아카이브
+
+# 이 팀이 수행하는 작업 유형
+capabilities:
+  - comparison   # 기술/도구 비교 분석
+  - poc          # POC 분석 및 평가
+  - architecture # 아키텍처 검토
+  - survey       # 기술 서베이
+  - summary      # 요약 및 정리
+
+# 리서치 결과물 템플릿
+templates:
+  comparison: "templates/COMPARISON_TEMPLATE.md"
+  poc: "templates/POC_TEMPLATE.md"
+  architecture: "templates/ARCHITECTURE_TEMPLATE.md"
+
+# 위임 시 필수 정보
+delegation_requirements:
+  - research_question  # 조사 질문
+  - scope              # 조사 범위
+  - output_format      # 결과물 형식
+
+keywords:
+  - research
+  - 리서치
+  - 조사
+  - 분석
+  - 비교
+  - POC
